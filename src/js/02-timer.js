@@ -8,7 +8,7 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0].getTime());
+    console.log(selectedDates[0]);
   },
 };
 
@@ -16,7 +16,7 @@ const options = {
 
 
 
-flatpickr('#datetime-picker', options.enableTime);
+flatpickr('#datetime-picker', options);
 
 
 
@@ -47,7 +47,7 @@ console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
 
-/*
+
 Notiflix.Confirm.show(
   'Notiflix Confirm',
   'Do you agree with me?',
@@ -65,9 +65,9 @@ Notiflix.Confirm.show(
     // etc...
   },
 );
-*/
 
 
+/*
 
 
 // УДАЛИТЬ ПОСЛЕ ТЕСТИРОВКИ!!!
@@ -79,6 +79,8 @@ console.log(date.getMonth());
 console.log(date.getYear());
 console.log(date.getTime()); */
 
+
+/*
 const date1 = Date.now();
 /* setInterval(() => {
   const date2 = Date.now();
