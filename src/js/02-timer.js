@@ -1,5 +1,6 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import Notiflix from 'notiflix';
 
 const options = {
   enableTime: true,
@@ -7,7 +8,7 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    console.log(selectedDates[0].getTime());
   },
 };
 
@@ -15,7 +16,7 @@ const options = {
 
 
 
-flatpickr('#datetime-picker', options);
+flatpickr('#datetime-picker', options.enableTime);
 
 
 
@@ -44,3 +45,48 @@ function convertMs(ms) {
 console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
+
+
+/*
+Notiflix.Confirm.show(
+  'Notiflix Confirm',
+  'Do you agree with me?',
+  'Yes',
+  'No',
+  function okCb() {
+    alert('Thank you.');
+  },
+  function cancelCb() {
+    alert('If you say so...');
+  },
+  {
+    width: '320px',
+    borderRadius: '8px',
+    // etc...
+  },
+);
+*/
+
+
+
+
+// УДАЛИТЬ ПОСЛЕ ТЕСТИРОВКИ!!!
+const date = new Date();
+
+/* console.log(date);
+console.log(date.getDay());
+console.log(date.getMonth());
+console.log(date.getYear());
+console.log(date.getTime()); */
+
+const date1 = Date.now();
+/* setInterval(() => {
+  const date2 = Date.now();
+
+  console.log(date1);
+  console.log(date2);
+
+  console.log(date1 - date2);
+}, 1000); */
+
+
