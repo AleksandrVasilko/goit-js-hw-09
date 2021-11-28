@@ -1,28 +1,53 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import Notiflix from 'notiflix';
+
+const refs = {
+    numberOfDays: document.querySelector('[data-days]'),
+    numberOfHours:document.querySelector('[data-hours]'),
+    numberOfMinutes:document.querySelector('[data-minutes]'),
+    numberOfSeconds:document.querySelector('[data-seconds]'),
+    startBtn: document.querySelector('[data-start]'),
+    selectedTime: null,
+}
+refs.startBtn.setAttribute('disabled', true)
+
+
+const pad = value => {
+  return String(value).padStart(2, '0');
+}
+
+const onClickStartBtn = () => {
+  return refs.selectedTime - new Date().getTime()
+}
+
+let timerId = null;
 
 const options = {
-  enableTime: true,
-  time_24hr: true,
-  defaultDate: new Date(),
-  minuteIncrement: 1,
-  onClose(selectedDates) {
-    console.log(selectedDates[0]);
-  },
-};
+    enableTime: true,
+    time_24hr: true,
+    defaultDate: new Date(),
+    minuteIncrement: 1,
+    onClose(selectedDates) {
+        if(selectedDates[0].getTime() < new Date().getTime()){
+            Notify.failure(
+                'Please choose a date in the future',
+                {
+                  timeout: 5000,
+                },
+              );
+              refs.startBtn.setAttribute('disabled', true)
+            return;
+        }
+      refs.selectedTime = selectedDates[0].getTime()
+      console.log(refs.selectedTime)
+        refs.startBtn.removeAttribute('disabled')
+    },
+  }
 
 
-
-
-
-flatpickr('#datetime-picker', options);
-
-
-
-
-
-
+flatpickr("#datetime-picker", options)
+  
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
@@ -31,64 +56,40 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = pad(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = pad(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 }
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
-
-
-Notiflix.Confirm.show(
-  'Notiflix Confirm',
-  'Do you agree with me?',
-  'Yes',
-  'No',
-  function okCb() {
-    alert('Thank you.');
-  },
-  function cancelCb() {
-    alert('If you say so...');
-  },
-  {
-    width: '320px',
-    borderRadius: '8px',
-    // etc...
-  },
-);
-
-
-/*
-
-
-// УДАЛИТЬ ПОСЛЕ ТЕСТИРОВКИ!!!
-const date = new Date();
-
-/* console.log(date);
-console.log(date.getDay());
-console.log(date.getMonth());
-console.log(date.getYear());
-console.log(date.getTime()); */
-
-
-/*
-const date1 = Date.now();
-/* setInterval(() => {
-  const date2 = Date.now();
-
-  console.log(date1);
-  console.log(date2);
-
-  console.log(date1 - date2);
-}, 1000); */
-
-
+  const theCountdownStarted = () => {
+     timerId = setInterval(() => {
+      const { days, hours, minutes, seconds } = convertMs(onClickStartBtn())
+       updateTime({ days, hours, minutes, seconds })
+       if (onClickStartBtn() <= 1000) {
+         clearInterval(timerId);
+         Notify.failure(
+                'Time is up',
+                {
+                  timeout: 5000,
+                },
+              );
+    }
+     }, 1000)
+    
+  }
+  
+   const updateTime = (({days, hours, minutes, seconds}) => {
+    refs.numberOfDays.textContent = `${days}`;
+    refs.numberOfHours.textContent = `${hours}`;
+    refs.numberOfMinutes.textContent = `${minutes}`;
+     refs.numberOfSeconds.textContent = `${seconds}`;
+  })
+  refs.startBtn.addEventListener('click', theCountdownStarted )
+  
