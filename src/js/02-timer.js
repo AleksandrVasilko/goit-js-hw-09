@@ -75,11 +75,12 @@ function convertMs(ms) {
        if (onClickStartBtn() <= 1000) {
          clearInterval(timerId);
          Notify.failure(
-                'Time is up',
+                'Time is up. Set new timer.',
                 {
                   timeout: 5000,
                 },
-              );
+         );
+         refs.startBtn.setAttribute('disabled', true);
     }
      }, 1000)
     
